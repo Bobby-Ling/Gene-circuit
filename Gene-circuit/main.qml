@@ -1162,7 +1162,7 @@ Item {
                                                 required property string description
                                                 required property string picture
                                                 Text {
-                                                    Layout.fillHeight: true
+                                                    // Layout.fillHeight: true
                                                     Layout.fillWidth: true
                                                     text: parent.title
 
@@ -1187,7 +1187,7 @@ Item {
                                                 }
 
                                                 Text {
-                                                    Layout.fillHeight: true
+                                                    // Layout.fillHeight: true
                                                     Layout.fillWidth: true
                                                     text: parent.description
                                                     wrapMode: Text.WordWrap
