@@ -7,7 +7,7 @@ import QtCore
 import "Utils.js" as Utils
 
 import Emulator 1.0
-import FileIO 1.0 // 单例
+import FileIO 1.0 
 
 Item {
     id: root
@@ -116,10 +116,6 @@ Item {
 
                     ListModel {
                         id: dropModel
-                        // ListElement 本身也是ListModel
-                        // 使用Object承载数据时, Model只读, 无法修改
-                        // Model和View是单向绑定(MVC)
-                        // sequenceIndex 可以通过parent.parent.index访问(当stateType=="inSequence")
                         // ListElement {
                         //     uuid: string
                         //     modelData: string
@@ -273,7 +269,6 @@ Item {
                                         console.log("sequenceItem doubleClicked")
 
                                         for (let i = 0; i < droppedItemModel.count ; i++) {
-                                            // 修改状态后重新加入
                                             let reAddItem = droppedItemModel.get(i)
                                             reAddItem.stateType = "dropped"
                                             reAddItem.posX = sequenceItem.posX + i * (reAddItem.itemWidth + 15)
@@ -300,7 +295,6 @@ Item {
                         Rectangle {
                             id: dragItem
 
-                            // 要手动加才可以访问index附加属性
                             required property int index
                             required property string uuid
                             required property real posX
@@ -311,7 +305,6 @@ Item {
                             required property string stateType
                             required property var sourceData
 
-                            // 绑定容易出问题
                             property int sequenceIndex: (stateType==="inSequence" && (typeof(parent.parent.index)!="undefined")) ? parent.parent.index : -1
 
                             function getSequenceIndex() {
@@ -344,14 +337,12 @@ Item {
                             function actualState() {
                                 let str = ""
                                 str+="uuid: "+dragItem.uuid+"\n"
-                                // str+="sequenceIndex: "+dragItem.sequenceIndex+"\n"
                                 str+="z: "+dragItem.z+"\n"
                                 str+="active: "+dragItem.Drag.active+"\n"
                                 str+="pressed: "+pressed+"\n"
                                 str+="type: "+(dragItem.Drag.dragType == Drag.Internal ? "Internal" : "Automatic")+"\n"
                                 str+="state: "+dragItem.stateType+"\n"
                                 str+="posX: "+dragItem.posX+" posY: "+dragItem.posY+"\n"
-                                // str+="hotSpot: "+dragItem.Drag.hotSpot.x+" "+dragItem.Drag.hotSpot.y
                                 return str
                             }
 
@@ -361,7 +352,6 @@ Item {
 
                             x: posX
                             y: posY
-                            // 这里z值非常重要, 至少要比canvasArea高
                             z: 10
                             width: itemWidth
                             height: itemHeight
@@ -370,7 +360,6 @@ Item {
                             border.width: 2
                             objectName: "description of dragItem"
 
-                            // opacity: Drag.active ? 0.8 : 1
 
                             PropertyAnimation {
                                 id: dragItemOpacityAnimation
@@ -400,13 +389,9 @@ Item {
                                 }
                             }
 
-                            // 一般用于跨应用, dragItem可超出窗口范围, 使用mimeData传递数据
-                            // 需要自己处理imageSource同时绑定Drag.active: dragArea.drag.active(可选)
-                            // 这里为了平滑, 自定义了dragItem.Drag.hotSpot并在pressed时设置Drag.active=true
                             // Drag.active: dragArea.drag.active
                             // Drag.dragType: parent == canvas ? Drag.Internal : Drag.Automatic
                             Drag.dragType: (stateType === "dropped" || stateType === "inSequence") ? Drag.Internal : Drag.Automatic
-                            // 默认, 在窗口内进行
                             // Drag.dragType: Drag.Internal
                             Drag.mimeData: {"inSource": "inSource", "dropped": "dropped", "inSequence": "inSequence"}
                             Drag.keys: [stateType]
@@ -414,7 +399,6 @@ Item {
                             property alias pressed: dragArea.pressed
 
                             Repeater {
-                                // sourceDataModel为只读副本
                                 model: ListModel {
                                     id: sourceDataModel
                                     Component.onCompleted: {
@@ -447,11 +431,9 @@ Item {
                                         canvas.clip = false
                                         dragItem.z +=1
                                         console.log("startDrag")
-                                        // mouse.x+" "+mouse.y是相对于当前item(dragArea)的
                                         // console.log(mouse.x+" "+mouse.y)
                                         dragItem.Drag.hotSpot.x = mapToItem(dragItem, Qt.point(mouse.x, mouse.y)).x
                                         dragItem.Drag.hotSpot.y = mapToItem(dragItem, Qt.point(mouse.x, mouse.y)).y
-                                        // 问题在于, 由于是异步调用, 点击时不会立即生成图像, 第二次点击才可
                                         // dragItem.grabToImage(function(result) {
                                         //     dragItem.Drag.imageSource = result.url
                                         // })
@@ -462,7 +444,6 @@ Item {
                                         }
                                     }
                                     onEntered: {
-                                        // 最终解决办法: hoverEnabled: true然后onEntered中抓取
                                         if (dragItem.Drag.dragType === Drag.Automatic){
                                             dragItem.grabToImage(function(result) {
                                                 dragItem.Drag.imageSource = result.url
@@ -471,7 +452,6 @@ Item {
                                         }
                                     }
                                     // onPressedChanged: {
-                                    //     问题在于, drop后pressed依然为true
                                     //     if (dragArea.pressed) {
                                     //     }else {
                                     //     }
@@ -479,7 +459,6 @@ Item {
 
                                     onReleased: {
                                         canvas.clip = true
-                                        // 大问题, onReleased()有一定几率凭空不会被调用
                                         dragItem.z -=1
                                         console.log("onReleased");
                                         dragItem.Drag.drop();
@@ -515,7 +494,6 @@ Item {
                                         Layout.fillWidth: true
                                         Layout.alignment: Qt.AlignBottom
 
-                                        // 区分左右连接区域
                                         required property int index
 
                                         DropArea {
@@ -556,7 +534,6 @@ Item {
                                                 var downItem = dragItem
 
                                                 console.log("dropped at connectionDropArea:")
-                                                // 需要针对不同的组件类型进行过滤
                                                 if (!checkCompatibility(upItem, downItem)) {
                                                     console.log("not dropped")
                                                     return
@@ -577,11 +554,9 @@ Item {
                                                 }
                                                 let currentSequenceIndex = downItem.sequenceIndex
                                                 if(currentSequenceIndex !==-1){
-                                                    // down已经在一个序列内了
-                                                    console.log("down已经在一个序列内了")
-                                                    // 修改之后不能调用getModel()
+                                                    // down is already in a sequence
+                                                    console.log("down is already in a sequence")
 
-                                                    // 左区域则插在前面, 否则插在后面
                                                     // in sequenceModel.get(sequenceIndex).droppedItemModel
                                                     console.log(downItem.index+" "+connectionArea.index)
                                                     downItem.getModel().insert(downItem.index + connectionArea.index, dropModel.get(upItemIndex))
@@ -593,8 +568,8 @@ Item {
 
                                                     dropModel.remove(upItemIndex)
                                                 }else{
-                                                    // 全新的两个元素
-                                                    console.log("全新的两个元素")
+                                                    // Two new elements
+                                                    console.log("Two new elements")
                                                     downItem.getCurrentData().stateType = "inSequence" // in dropModel
                                                     sequenceModel.append({
                                                         uuid: Utils.uuid(),
@@ -629,7 +604,6 @@ Item {
                     DropArea {
                         id: canvasDropArea
                         anchors.fill: parent
-                        // 接受
                         keys: ["inSource", "dropped"]
 
                         onEntered: {
@@ -639,10 +613,8 @@ Item {
                             // console.log("exited canvasDropArea")
                         }
 
-                        // DropArea还具有drag.source属性
                         onDropped: { // canvasDropArea
                             // dropped(DragEvent drop)
-                            // 可以使用drop.source(参数)或drag.source(属性)访问dragItem
                             let upItem = drop.source
 
                             console.log("dropped at: canvasDropArea")
@@ -680,7 +652,6 @@ Item {
                         anchors.margins: 10
                         border.color: Qt.lighter("gray")
                         border.width: 2
-                        // ScrollView需要指定Flow的宽高: 宽高达到一定程度才会Scroll
                         ScrollView {
                             anchors.fill: parent
                             clip: true
@@ -693,11 +664,6 @@ Item {
                                     id: dragRepeater
                                     model: dragModel
                                     delegate: dragCompenent
-                                    // 或者
-                                    // delegate: Component {
-                                        // ...
-                                    // }
-                                    // 但是不能是Loader
 
                                     function rePresent() {
                                         canvas.clip = true
@@ -728,7 +694,6 @@ Item {
 
                         onDropped: { // removeArea
                             // dropped(DragEvent drop)
-                            // 可以使用drop.source(参数)或drag.source(属性)访问dragItem
                             var upItem = drag.source
 
                             console.log("dropped at removeArea")
@@ -905,7 +870,6 @@ Item {
                                 }
                             }
 
-                            // 为了使用居中
                             RowLayout {
                                 id: inputZone
 
@@ -950,21 +914,16 @@ Item {
 
                     MouseArea {
                         anchors.fill: parent
-                        // 定义一个计时器来聚合滚动事件
                         Timer {
                             id: scrollTimer
-                            interval: 100 // 设置合适的时间间隔（毫秒）
+                            interval: 100 
                             repeat: false
                         }
 
                         onWheel: {
-                            // 响应一次滚动:
-                            // 1. 当滚轮事件开始且计时器没有运行
-                            // 2. 方向切换了
                             if(wheel.inverted||(!scrollTimer.running)||((Math.abs(wheel.angleDelta.y)>=120)||(Math.abs(wheel.angleDelta.y)>=120))){
                                 scrollTimer.start();
                                 if(wheel.angleDelta.x<0||wheel.angleDelta.y<0){
-                                    // index遵循C风格
                                     if(bar.currentIndex===bar.count-1){
                                         bar.setCurrentIndex(0)
                                     }else{
@@ -980,10 +939,8 @@ Item {
                             }else{
                                 scrollTimer.restart();
                             }
-                           // console.log(wheel.angleDelta);
                         }
                     }
-                    // SwipeView无法直接获取事件响应, 因此将MouseArea放在SwipeView的下面
 
                     ColumnLayout {
                         anchors.fill: parent
@@ -1000,14 +957,13 @@ Item {
 
                                 Container {
                                     id: bar
-                                    // 双向绑定
                                     currentIndex: view.currentIndex
 
                                     contentItem: RowLayout {
                                     }
                                     Repeater {
                                         id: tabButtons
-                                        model: ["Example 📚", "Questions 💡", "Load 🛠"]
+                                        model: ["Example 📚", "Tutorial 💡", "Load 🛠"]
                                         delegate: Control {
                                             Layout.fillHeight: true
                                             Layout.preferredWidth: tabButtons.getButtonWidth()
@@ -1067,10 +1023,7 @@ Item {
                             }
                             contentItem: SwipeView {
                                 id: view
-                                // 双向绑定
                                 currentIndex: bar.currentIndex
-
-                                // from Item, default false 限制被显示的项是否只在当前区域内显示
                                 clip: true
 
                                 Item {
@@ -1138,7 +1091,6 @@ Item {
                                                         dropModel.clear()
                                                         sequenceModel.clear()
                                                         ioModel.init()
-                                                        // TODO ??? 直接append questionsTextSection.loadData不行
                                                         sequenceModel.append(JSON.parse(JSON.stringify(questionsTextSection.loadData)))
                                                     }
                                                 }
@@ -1162,13 +1114,10 @@ Item {
                                                 required property string description
                                                 required property string picture
                                                 Text {
-                                                    // Layout.fillHeight: true
                                                     Layout.fillWidth: true
                                                     text: parent.title
-
-                                                    font.pixelSize: 18
-                                                    font.bold: true
-                                                    horizontalAlignment: Text.AlignHCenter
+                                                    font.pixelSize: 14
+                                                    wrapMode: Text.WordWrap
                                                 }
                                                 
                                                 Control {
@@ -1187,7 +1136,7 @@ Item {
                                                 }
 
                                                 Text {
-                                                    // Layout.fillHeight: true
+                                                    //Layout.fillHeight: true
                                                     Layout.fillWidth: true
                                                     text: parent.description
                                                     wrapMode: Text.WordWrap
@@ -1226,7 +1175,6 @@ Item {
                                                 id: restore
                                                 text: "Restore"
                                                 onClicked: {
-                                                    // 对象数组
                                                     dropModel.append(JSON.parse(JSON.stringify(settings.dropModelData)))
                                                     sequenceModel.append(JSON.parse(JSON.stringify(settings.sequenceModelData)))
                                                 }
