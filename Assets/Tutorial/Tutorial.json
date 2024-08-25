@@ -1,0 +1,64 @@
+[
+    {
+        "step": 1,
+        "title": "",
+        "picture": "Assets/Tutorial/tut1.png",
+        "description": "Gene-circuit is a software that allows users to experience Gene fragment design and synthetic biology experiments by simulating the construction of eukaryotic genomes. It has the same level of differential equation simulation as genetic circuit design modeling, while visually programming with an intuitive UI."
+    },
+    {
+        "step": 2,
+        "title": "",
+        "picture": "Assets/Tutorial/tut2.png",
+        "description": "The application has four domains. Gene construction area (top left), gene element tray area (bottom left), relevant information area (bottom right), and program execution area (top right)."
+    },
+    {
+        "step": 3,
+        "title": "",
+        "picture": "Assets/Tutorial/tut3.png",
+        "description": "The nucleotide sequence tray has sequence blocks, each of which represents a sequence with a specific role: promoter, protein coding region, terminator, etc. The promoter block is an attachment with an arrow shape. The protein coding region is shown by a slender oval"
+    },
+    {
+        "step": 4,
+        "title": "",
+        "picture": "Assets/Tutorial/tut4.png",
+        "description": "In the Gene Building area, you can combine genetic elements to create unique genetic circuits."
+    },
+    {
+        "step": 5,
+        "title": "",
+        "picture": "Assets/Tutorial/tut5.png",
+        "description": "In the program execution area, environmental parameters can be controlled before and during simulation. It mainly includes the regulation of blood glucose concentration and fluorescence intensity."
+    },
+    {
+        "step": 6,
+        "title": "\n\n\n\n\n\nThe 'Information' TAB consists of five tabs: 'Example', 'Tutorial', 'Clear', 'Evaluate' and 'Load'.  The'Example' TAB shows the paradigms of several gene components, each with a unique function, in addition to the complete CSU project.  The 'Tutorial' TAB provides detailed descriptions of various possible problems throughout the software run process.  'Clear' allows you to clear previously built components with one click, and the 'Load' TAB allows you to effectively test and modify the underlying code and running logic of the software.  The Evaluate TAB, as the name suggests, runs the program you built in the genetic construction area.",
+        "picture": "",
+        "description": ""
+    },
+    {
+        "step": 7,
+        "title": "",
+        "picture": "Assets/Tutorial/tut7.png",
+        "description": "Let's take a look at the flow of Gene-circuit operation. First, drag and drop the block from the tray into the domain. You can combine two blocks by moving the block closer to an existing block in the program domain. If you want to separate a particular block from other blocks in your program, double-click it. Blocks that are no longer needed can be dragged and dropped back into the tray."
+    },
+    {
+        "step": 8,
+        "title": "",
+        "picture": "Assets/Tutorial/tut8.png",
+        "description": " By connecting these building blocks together, you can build genetic circuits any way you like! Standard genes are composed of promoters, protein-coding regions in this order (terminators have been omitted, as mentioned earlier). As a test, let's connect the 'constitutive promoter' and the 'protein-coding region' in this order. When you are finished building the circuit, click the Evaluate button. Simulation will begin."
+    },
+    {
+        "step": 9,
+        "title": "",
+        "picture": "Assets/Tutorial/tut9.png",
+        "description": "In the laboratory area, you can adjust two parameters separately: the initial blood glucose concentration and the presence or absence of blue light exposure."
+    },
+    {
+        "step": 10,
+        "title": "",
+        "picture": "Assets/Tutorial/tut10.png",
+        "description": "After pressing the Run button and adjusting the environment, the next step is to observe and evaluate the results of the experiment. The genes in the lab show roughly the amount and type of fluorescent protein being expressed."
+    }
+
+
+]

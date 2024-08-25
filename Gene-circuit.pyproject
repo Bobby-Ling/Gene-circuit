@@ -1,0 +1,19 @@
+{
+    "files": [
+        "CommonHolderWindow.qml",
+        "Emulator.py",
+        "FileIO.py",
+        "GeneticElementComponent.qml",
+        "GridLayer.qml",
+        "JSConsole.qml",
+        "JSConsoleButton.qml",
+        "PlotCanvas.qml",
+        "SwipeBanner.qml",
+        "Utils.js",
+        "WindowFrameRate.qml",
+        "deploy.bat",
+        "main.py",
+        "main.qml",
+        "pd.py"
+    ]
+}
