@@ -26,7 +26,6 @@ def main():
     app.setApplicationName("Gene-circuit")
     app.setOrganizationName(" ")
     app.setOrganizationDomain(" ")
-    # app.setFont(QFont("Consolas, 微软雅黑"))
     engine = QQmlApplicationEngine()
     qml_file = os.getcwd() + "/CommonHolderWindow.qml"
 
