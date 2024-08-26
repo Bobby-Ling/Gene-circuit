@@ -1,8 +1,16 @@
 /src/
-/.qtcreator/
 /Emulator/
 /FileIO/
-/dist/
-/main.build/
-/main.dist/
-/build/
+.qtcreator/
+dist/
+main.build/
+main.dist/
+__pycache__/
+build/
+
+# QtCreator
+*.autosave
+
+# QtCreator Qml
+*.user
+*.user.*
